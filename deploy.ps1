@@ -15,14 +15,14 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "[V] Build concluido com sucesso!" -ForegroundColor Green
 Write-Host "-> A transferir ficheiros para ${SshUser}@${ServerIP}:${WebDir}..." -ForegroundColor Yellow
 
-# Entrar na pasta dist para copiar apenas o conteudo
-Set-Location -Path "dist"
+# Obter todos os ficheiros e pastas dentro da pasta dist
+$items = Get-ChildItem -Path "dist" | Select-Object -ExpandProperty FullName
 
-# Usar SCP (nativo no Windows 10/11) para transferir os ficheiros
-scp -r * ${SshUser}@${ServerIP}:${WebDir}
+# Construir os argumentos para o scp
+$scpArgs = @("-r") + $items + "${SshUser}@${ServerIP}:${WebDir}"
 
-# Voltar a pasta original
-Set-Location -Path ".."
+# Executar o scp com os argumentos
+& scp $scpArgs
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "[X] Falha na transferencia de ficheiros." -ForegroundColor Red

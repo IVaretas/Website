@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Google AI Studio App</title>
+    <script>
+      window.addEventListener('error', function(event) {
+        document.body.innerHTML += '<div style="background: #fee2e2; color: #991b1b; padding: 20px; margin: 20px; border-radius: 8px; font-family: sans-serif; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; border: 1px solid #f87171;"><strong>Erro de JavaScript:</strong><br>' + event.message + '<br><br><small>' + event.filename + ':' + event.lineno + '</small></div>';
+      });
+      window.addEventListener('unhandledrejection', function(event) {
+        document.body.innerHTML += '<div style="background: #fee2e2; color: #991b1b; padding: 20px; margin: 20px; border-radius: 8px; font-family: sans-serif; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; border: 1px solid #f87171;"><strong>Erro de Promise:</strong><br>' + event.reason + '</div>';
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
