@@ -15,8 +15,11 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "[V] Build concluido com sucesso!" -ForegroundColor Green
 Write-Host "-> A transferir ficheiros para ${SshUser}@${ServerIP}:${WebDir}..." -ForegroundColor Yellow
 
-# Obter todos os ficheiros e pastas dentro da pasta dist
-$items = Get-ChildItem -Path "dist" | Select-Object -ExpandProperty FullName
+# Entrar na pasta dist para usar caminhos relativos (evita o erro do C: no scp)
+Push-Location -Path "dist"
+
+# Obter apenas os nomes dos ficheiros e pastas (ex: "assets", "index.html")
+$items = Get-ChildItem -Name
 
 # Construir os argumentos para o scp
 $scpArgs = @("-r") + $items + "${SshUser}@${ServerIP}:${WebDir}"
@@ -24,7 +27,12 @@ $scpArgs = @("-r") + $items + "${SshUser}@${ServerIP}:${WebDir}"
 # Executar o scp com os argumentos
 & scp $scpArgs
 
-if ($LASTEXITCODE -ne 0) {
+$exitCode = $LASTEXITCODE
+
+# Voltar a pasta original
+Pop-Location
+
+if ($exitCode -ne 0) {
     Write-Host "[X] Falha na transferencia de ficheiros." -ForegroundColor Red
     exit 1
 }
