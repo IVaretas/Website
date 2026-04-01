@@ -18,11 +18,15 @@ Write-Host "-> A transferir ficheiros para ${SshUser}@${ServerIP}:${WebDir}..." 
 # Entrar na pasta dist para usar caminhos relativos (evita o erro do C: no scp)
 Push-Location -Path "dist"
 
-# Obter apenas os nomes dos ficheiros e pastas (ex: "assets", "index.html")
-$items = Get-ChildItem -Name
+# Obter apenas os nomes dos ficheiros (agora não há pastas)
+$items = Get-ChildItem -File | Select-Object -ExpandProperty Name
 
 # Construir os argumentos para o scp
-$scpArgs = @("-r") + $items + "${SshUser}@${ServerIP}:${WebDir}"
+$scpArgs = @()
+foreach ($item in $items) {
+    $scpArgs += $item
+}
+$scpArgs += "${SshUser}@${ServerIP}:${WebDir}"
 
 # Executar o scp com os argumentos
 & scp $scpArgs
