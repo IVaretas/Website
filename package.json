@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
-    "deploy": "bash deploy.sh",
+    "deploy": "powershell -ExecutionPolicy Bypass -File deploy.ps1",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
